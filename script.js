@@ -3,9 +3,18 @@ console.log("I'm working.");
 //Our function for calling the data from the API
 $(document).ready(function () {
 
+
+});
+
+//Function which handles when our user submits a value
+// This function handles events where a movie button is clicked
+$(".submit").on("click", function (event) {
+    event.preventDefault();
+    // This line grabs the input from the textbox
+    var cities = $("#city").val().trim();
+    console.log(cities)
     // This is our API key
     var APIKey = "7da86c3d6d515ae36123339318916fd1";
-    var cities = "London";
 
     // Here we are building the URL we need to query the database
     var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cities + "&appid=" + APIKey;
@@ -42,12 +51,3 @@ $(document).ready(function () {
             console.log("Temperature (F): " + tempF);
         });
 });
-
-//Function which handles when our user submits a value
-      // This function handles events where a movie button is clicked
-      $(".submit").on("click", function(event) {
-        event.preventDefault();
-        // This line grabs the input from the textbox
-        var cities = $("#city").val().trim();
-        console.log(cities)
-      });
