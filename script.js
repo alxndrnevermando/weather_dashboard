@@ -17,7 +17,7 @@ $(".submit").on("click", function (event) {
     var APIKey = "7da86c3d6d515ae36123339318916fd1";
 
     // Here we are building the URL we need to query the database
-    var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cities + "&appid=" + APIKey;
+    var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + cities + "&appid=" + APIKey;
 
     // Here we run our AJAX call to the OpenWeatherMap API
     $.ajax({
@@ -34,20 +34,15 @@ $(".submit").on("click", function (event) {
             console.log(response);
 
             // Transfer content to HTML
-            $(".city").html("<h1>" + response.name + " Weather Details</h1>");
-            $(".wind").text("Wind Speed: " + response.wind.speed);
-            $(".humidity").text("Humidity: " + response.main.humidity);
-
+            $(".cityInfo").html("<h1>" + response.city.name + " (" + response.list[0].dt_txt + ")</h1>");
             // Convert the temp to fahrenheit
-            var tempF = (response.main.temp - 273.15) * 1.80 + 32;
-
-            // add temp content to html
-            $(".temp").text("Temperature (K) " + response.main.temp);
-            $(".tempF").text("Temperature (F) " + tempF.toFixed(2));
-
+            let tempF = (response.list[0].main.temp - 273.15) * 1.80 + 32;
+            $(".cityInfo").append("Temperature (F) " + tempF.toFixed(2));
+            $(".cityInfo").append("Humidity: " + response.list[0].main.humidity);
+            $(".cityInfo").append("Wind Speed: " + response.list[0].wind.speed);
             // Log the data in the console as well
-            console.log("Wind Speed: " + response.wind.speed);
-            console.log("Humidity: " + response.main.humidity);
+            console.log("Wind Speed: " + response.list[0].wind.speed);
+            console.log("Humidity: " + response.list[0].main.humidity);
             console.log("Temperature (F): " + tempF);
         });
 });
