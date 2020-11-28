@@ -35,11 +35,14 @@ $(".submit").on("click", function (event) {
 
             // Transfer content to HTML
             $(".cityInfo").html("<h1>" + response.city.name + " (" + response.list[0].dt_txt + ")</h1>");
+            var iconcode = response.list[0].weather[0].icon;
+            var iconurl = "http://openweathermap.org/img/w/" + iconcode + ".png";
+            $('#wicon').attr('src', iconurl);
             // Convert the temp to fahrenheit
             let tempF = (response.list[0].main.temp - 273.15) * 1.80 + 32;
-            $(".cityInfo").append("Temperature (F) " + tempF.toFixed(2));
-            $(".cityInfo").append("Humidity: " + response.list[0].main.humidity);
-            $(".cityInfo").append("Wind Speed: " + response.list[0].wind.speed);
+            $(".cityInfo").append("<br>" + "Temperature (F) " + tempF.toFixed(1) + "</br>");
+            $(".cityInfo").append("<br>" + "Humidity: " + response.list[0].main.humidity + "%" + "</br>");
+            $(".cityInfo").append("<br>" + "Wind Speed: " + response.list[0].wind.speed + "MPH" + "</br>");
             // Log the data in the console as well
             console.log("Wind Speed: " + response.list[0].wind.speed);
             console.log("Humidity: " + response.list[0].main.humidity);
