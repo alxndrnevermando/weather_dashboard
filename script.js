@@ -11,22 +11,22 @@ $(document).ready(function () {
 
 });
 
-function renderCities(){
+function renderCities() {
     $("#cityHistory").empty();
     $("#city").val("");
-    
-    for (i=0; i<cityList.length; i++){
+
+    for (i = 0; i < cityList.length; i++) {
         var a = $("<a>");
         a.addClass("cityListBox");
         a.attr("data-name", cityList[i]);
         a.text(cityList[i]);
         $("#cityHistory").prepend(a);
-    } 
+    }
 }
 // This function saves the city array to local storage
 function storeCityList() {
     localStorage.setItem("cities", JSON.stringify(cityList));
-    }
+}
 
 // This function saves the currently display city to local storage
 function storeCities() {
@@ -35,13 +35,13 @@ function storeCities() {
 }
 function initCityList() {
     var storedCities = JSON.parse(localStorage.getItem("cities"));
-    
+
     if (storedCities !== null) {
         cityList = storedCities;
     }
-    
+
     renderCities();
-    }
+}
 
 //Function which handles when our user submits a value
 // This function handles events where a movie button is clicked
@@ -68,7 +68,7 @@ function getWeatherData() {
         method: "GET"
     })
         // We store all of the retrieved data inside of an object called "response"
-        .then(function (response) {
+        .then (function (response) {
 
             // Log the queryURL
             console.log(queryURL);
@@ -86,9 +86,16 @@ function getWeatherData() {
             $(".cityInfo").append("<br>" + "Temperature (F) " + tempF.toFixed(1) + "</br>");
             $(".cityInfo").append("<br>" + "Humidity: " + response.list[0].main.humidity + "%" + "</br>");
             $(".cityInfo").append("<br>" + "Wind Speed: " + response.list[0].wind.speed + "MPH" + "</br>");
-            // Log the data in the console as well
-            console.log("Wind Speed: " + response.list[0].wind.speed);
-            console.log("Humidity: " + response.list[0].main.humidity);
-            console.log("Temperature (F): " + tempF);
+            var longValue = response.city.coord.lon;
+            var latValue = response.city.coord.lat;
+            var uvURL = "https://api.openweathermap.org/data/2.5/uvi?appid=7da86c3d6d515ae36123339318916fd1&lat=" + latValue + "&lon=" + longValue;
+            var uResponse = $.ajax({
+                url: uvURL,
+                method: "GET"
+            })
+
+                .then(function (uResponse) {
+                    $(".cityInfo").append("<br>" + "UV Index: " + uResponse.value + "</br>");
+                });
         });
 };
