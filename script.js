@@ -1,4 +1,6 @@
 console.log("I'm working.");
+var cityList = [];
+var cities;
 
 //Our function for calling the data from the API
 $(document).ready(function () {
@@ -6,12 +8,27 @@ $(document).ready(function () {
 
 });
 
+function renderCities(){
+    $("#cityList").empty();
+    $("#cityInput").val("");
+    
+    for (i=0; i<cityList.length; i++){
+        var a = $("<a>");
+        a.addClass("list-group-item list-group-item-action list-group-item-primary city");
+        a.attr("data-name", cityList[i]);
+        a.text(cityList[i]);
+        $("#cityList").prepend(a);
+    } 
+}
+
 //Function which handles when our user submits a value
 // This function handles events where a movie button is clicked
 $(".submit").on("click", function (event) {
     event.preventDefault();
     // This line grabs the input from the textbox
-    var cities = $("#city").val().trim();
+    cities = $("#city").val().trim();
+    cityList.push(cities);
+
     console.log(cities)
     // This is our API key
     var APIKey = "7da86c3d6d515ae36123339318916fd1";
