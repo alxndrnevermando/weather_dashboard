@@ -52,8 +52,10 @@ $(".submit").on("click", function (event) {
     cityList.push(cities);
     storeCities();
     storeCityList();
+    getWeatherData();
+});
 
-    console.log(cities)
+function getWeatherData() {
     // This is our API key
     var APIKey = "7da86c3d6d515ae36123339318916fd1";
 
@@ -89,4 +91,4 @@ $(".submit").on("click", function (event) {
             console.log("Humidity: " + response.list[0].main.humidity);
             console.log("Temperature (F): " + tempF);
         });
-});
+};
