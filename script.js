@@ -3,13 +3,7 @@ var cityList = [];
 var cities;
 
 initCityList();
-//initWeather();
-
-//Our function for calling the data from the API
-$(document).ready(function () {
-
-
-});
+initWeather();
 
 function renderCities() {
     $("#cityHistory").empty();
@@ -41,6 +35,16 @@ function initCityList() {
     }
 
     renderCities();
+}
+
+function initWeather() {
+    var storedWeather = JSON.parse(localStorage.getItem("currentCity"));
+
+    if (storedWeather !== null) {
+        cities = storedWeather;
+
+        getWeatherData();
+    }
 }
 
 //Function which handles when our user submits a value
