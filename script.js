@@ -2,6 +2,9 @@ console.log("I'm working.");
 var cityList = [];
 var cities;
 
+initCityList();
+initWeather();
+
 //Our function for calling the data from the API
 $(document).ready(function () {
 
@@ -9,15 +12,15 @@ $(document).ready(function () {
 });
 
 function renderCities(){
-    $("#cityList").empty();
-    $("#cityInput").val("");
+    $("#cityHistory").empty();
+    $("#city").val("");
     
     for (i=0; i<cityList.length; i++){
         var a = $("<a>");
-        a.addClass("list-group-item list-group-item-action list-group-item-primary city");
+        a.addClass("ul ul-li");
         a.attr("data-name", cityList[i]);
         a.text(cityList[i]);
-        $("#cityList").prepend(a);
+        $("#cityHistory").prepend(a);
     } 
 }
 
