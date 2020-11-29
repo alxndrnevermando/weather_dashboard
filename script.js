@@ -3,7 +3,7 @@ var cityList = [];
 var cities;
 
 initCityList();
-initWeather();
+//initWeather();
 
 //Our function for calling the data from the API
 $(document).ready(function () {
@@ -17,12 +17,31 @@ function renderCities(){
     
     for (i=0; i<cityList.length; i++){
         var a = $("<a>");
-        a.addClass("ul ul-li");
+        a.addClass("cityListBox");
         a.attr("data-name", cityList[i]);
         a.text(cityList[i]);
         $("#cityHistory").prepend(a);
     } 
 }
+// This function saves the city array to local storage
+function storeCityList() {
+    localStorage.setItem("cities", JSON.stringify(cityList));
+    }
+
+// This function saves the currently display city to local storage
+function storeCities() {
+
+    localStorage.setItem("currentCity", JSON.stringify(cities));
+}
+function initCityList() {
+    var storedCities = JSON.parse(localStorage.getItem("cities"));
+    
+    if (storedCities !== null) {
+        cityList = storedCities;
+    }
+    
+    renderCities();
+    }
 
 //Function which handles when our user submits a value
 // This function handles events where a movie button is clicked
@@ -31,6 +50,8 @@ $(".submit").on("click", function (event) {
     // This line grabs the input from the textbox
     cities = $("#city").val().trim();
     cityList.push(cities);
+    storeCities();
+    storeCityList();
 
     console.log(cities)
     // This is our API key
