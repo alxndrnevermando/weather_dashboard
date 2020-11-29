@@ -17,7 +17,7 @@ function renderCities() {
 
     for (i = 0; i < cityList.length; i++) {
         var a = $("<a>");
-        a.addClass("cityListBox");
+        a.addClass("cityListBox city");
         a.attr("data-name", cityList[i]);
         a.text(cityList[i]);
         $("#cityHistory").prepend(a);
@@ -53,6 +53,7 @@ $(".submit").on("click", function (event) {
     storeCities();
     storeCityList();
     getWeatherData();
+    renderCities();
 });
 
 function getWeatherData() {
@@ -60,7 +61,7 @@ function getWeatherData() {
     var APIKey = "7da86c3d6d515ae36123339318916fd1";
 
     // Here we are building the URL we need to query the database
-    var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + cities + "&appid=" + APIKey;
+    var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cities + "&appid=" + APIKey;
 
     // Here we run our AJAX call to the OpenWeatherMap API
     $.ajax({
@@ -77,17 +78,18 @@ function getWeatherData() {
             console.log(response);
 
             // Transfer content to HTML
-            $(".cityInfo").html("<h1>" + response.city.name + " (" + response.list[0].dt_txt + ")</h1>");
-            var iconcode = response.list[0].weather[0].icon;
-            var iconurl = "http://openweathermap.org/img/w/" + iconcode + ".png";
-            $('#wicon').attr('src', iconurl);
+            var d = new Date();
+            $(".cityInfo").html("<h1>" + response.name + " (" + d.toDateString() + ")</h1>");
+            var iconcode = response.weather[0].icon;
+            var displayCurrentWeatherIcon = $("<img src = http://openweathermap.org/img/wn/" + iconcode + "@2x.png />");
+            $(".cityInfo").append(displayCurrentWeatherIcon);
             // Convert the temp to fahrenheit
-            let tempF = (response.list[0].main.temp - 273.15) * 1.80 + 32;
+            let tempF = (response.main.temp - 273.15) * 1.80 + 32;
             $(".cityInfo").append("<br>" + "Temperature (F) " + tempF.toFixed(1) + "</br>");
-            $(".cityInfo").append("<br>" + "Humidity: " + response.list[0].main.humidity + "%" + "</br>");
-            $(".cityInfo").append("<br>" + "Wind Speed: " + response.list[0].wind.speed + "MPH" + "</br>");
-            var longValue = response.city.coord.lon;
-            var latValue = response.city.coord.lat;
+            $(".cityInfo").append("<br>" + "Humidity: " + response.main.humidity + "%" + "</br>");
+            $(".cityInfo").append("<br>" + "Wind Speed: " + response.wind.speed + "MPH" + "</br>");
+            var longValue = response.coord.lon;
+            var latValue = response.coord.lat;
             var uvURL = "https://api.openweathermap.org/data/2.5/uvi?appid=7da86c3d6d515ae36123339318916fd1&lat=" + latValue + "&lon=" + longValue;
             var uResponse = $.ajax({
                 url: uvURL,
@@ -99,3 +101,13 @@ function getWeatherData() {
                 });
         });
 };
+
+function displayPreviousInfo(){
+    cities = $(this).attr("data-name");
+    getWeatherData();
+    //displayFiveDayForecast();
+    console.log(cities);
+    
+}
+
+$(document).on("click", ".city", displayPreviousInfo);
