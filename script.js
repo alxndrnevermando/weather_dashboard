@@ -1,10 +1,12 @@
-console.log("I'm working.");
+//Global variables that hold the cities entered
 var cityList = [];
 var cities;
 
+//Functions that are initialized when the page loads/reloads
 initCityList();
 initWeather();
 
+//This function creates a list of our cities, and prepends them inside of a div
 function renderCities() {
     $("#cityHistory").empty();
     $("#city").val("");
@@ -17,16 +19,18 @@ function renderCities() {
         $("#cityHistory").prepend(a);
     }
 }
-// This function saves the city array to local storage
+// This function saves the cityList array to local storage
 function storeCityList() {
     localStorage.setItem("cities", JSON.stringify(cityList));
 }
 
-// This function saves the currently display city to local storage
+// This function saves the currently displayed city to local storage
 function storeCities() {
 
     localStorage.setItem("currentCity", JSON.stringify(cities));
 }
+
+//Grabs whatever is in our cityList and renders the list upon this function being called
 function initCityList() {
     var storedCities = JSON.parse(localStorage.getItem("cities"));
 
@@ -37,6 +41,7 @@ function initCityList() {
     renderCities();
 }
 
+//Grabs whatever city was last entered by the user, which is stored in our local storage, and displays that cities current weather data
 function initWeather() {
     var storedWeather = JSON.parse(localStorage.getItem("currentCity"));
 
@@ -48,7 +53,6 @@ function initWeather() {
 }
 
 //Function which handles when our user submits a value
-// This function handles events where a movie button is clicked
 $(".submit").on("click", function (event) {
     event.preventDefault();
     // This line grabs the input from the textbox
@@ -60,6 +64,7 @@ $(".submit").on("click", function (event) {
     renderCities();
 });
 
+//Makes an AJAX call which supplies our application with the weather data
 function getWeatherData() {
     // This is our API key
     var APIKey = "7da86c3d6d515ae36123339318916fd1";
@@ -81,19 +86,27 @@ function getWeatherData() {
             // Log the resulting object
             console.log(response);
 
-            // Transfer content to HTML
+            //Create var which holds date
             var d = new Date();
             $(".cityInfo").html("<h1>" + response.name + " (" + d.toDateString() + ")</h1>");
+            //Create var which holds the weather icon and append this to display in our app
             var iconcode = response.weather[0].icon;
             var displayCurrentWeatherIcon = $("<img src = http://openweathermap.org/img/wn/" + iconcode + "@2x.png />");
             $(".cityInfo").append(displayCurrentWeatherIcon);
-            // Convert the temp to fahrenheit
+            
+            // Convert the temp to fahrenheit for use later
             let tempF = (response.main.temp - 273.15) * 1.80 + 32;
+            
+            //Append temp, humidity, and wind speed to our display div
             $(".cityInfo").append("<br>" + "Temperature (F) " + tempF.toFixed(1) + "</br>");
             $(".cityInfo").append("<br>" + "Humidity: " + response.main.humidity + "%" + "</br>");
             $(".cityInfo").append("<br>" + "Wind Speed: " + response.wind.speed + "MPH" + "</br>");
+            
+            //Store the repsonse data containing lat and lon to variables
             var longValue = response.coord.lon;
             var latValue = response.coord.lat;
+
+            //Here we run a new AJAX call to a different API in order to get UV Index and append to display div
             var uvURL = "https://api.openweathermap.org/data/2.5/uvi?appid=7da86c3d6d515ae36123339318916fd1&lat=" + latValue + "&lon=" + longValue;
             var uResponse = $.ajax({
                 url: uvURL,
@@ -106,6 +119,7 @@ function getWeatherData() {
         });
 };
 
+//This function will display the weather info whenever a user clicks on a city in our list
 function displayPreviousInfo(){
     cities = $(this).attr("data-name");
     getWeatherData();
